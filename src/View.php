@@ -46,16 +46,13 @@ class View extends \yii\web\View
     private static function compress($html)
     {
         $filters = array(
-            // remove HTML comments except IE conditions
-            '/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/s' => '',
-            // remove comments in the form /* */
-            '/\/+?\s*\*[\s\S]*?\*\s*\/+/' => '',
-            // shorten multiple white spaces
-            '/>\s{2,}</' => '><',
-            // shorten multiple white spaces
-            '/\s{2,}/' => ' ',
-            // collapse new lines
-            '/(\r?\n)/' => '',
+            '/<!--[^\[](.*?)[^\]]-->/s' => '',
+            "/<\?php/"                  => '<?php ',
+            "/\n([\S])/"                => ' $1',
+            "/\r/"                      => '',
+            "/\n/"                      => '',
+            "/\t/"                      => ' ',
+            "/ +/"                      => ' ',
         );
 
         $output = preg_replace(array_keys($filters), array_values($filters), $html);
